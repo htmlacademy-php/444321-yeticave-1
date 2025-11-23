@@ -143,4 +143,12 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+function getFormatPrice(int $price): string {
+    $price = ceil($price);
 
+    if ($price >= 999) {
+        $price = number_format($price, 0, '.', ' ');
+    }
+
+    return $price . ' ₽';
+}
