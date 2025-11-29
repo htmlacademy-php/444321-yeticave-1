@@ -175,15 +175,15 @@ function getDateRange(string $toDate): array
     $finishDate = strtotime($toDate);
     $diff = $finishDate - $startDate;
 
-    $secondsInMinute = 60 * 60;
+    $secondsInMinute = 60;
     $minutesInHour = $secondsInMinute * 60;
 
-    $result = [0, 0];
+    $result = ['00', '00'];
 
     if ($diff <= 0) {
         return $result;
     } else {
-        $hours = $diff / $minutesInHour;
+        $hours = floor($diff / $minutesInHour);
 
         if ($hours < 1) {
             $hours = 0;
@@ -191,6 +191,10 @@ function getDateRange(string $toDate): array
         } else {
             $minutes = floor($diff % $minutesInHour / $secondsInMinute);
         }
+
+        // Форматирование времени
+        $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
+        $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
 
         return [$hours, $minutes];
     }

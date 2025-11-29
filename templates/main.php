@@ -35,13 +35,12 @@
                 <span class="lot__amount">Стартовая цена</span>
                 <span class="lot__cost"><?= $lot['price'] ? getFormatPrice($lot['price']) : ''; ?></span>
               </div>
-              <div class="lot__timer timer">
-                  <?php
-                  //                                  var_dump(getDateRange($lot['expirationDate']));
-                  $hours = getDateRange($lot['expirationDate'])[0] ?? 'dev_h';
-                  $minutes = getDateRange($lot['expirationDate'])[1] ?? 'dev_m';
-                  echo $hours . ' : ' . $minutes;
-                  ?>
+                <?php
+                $hours = getDateRange($lot['expirationDate'])[0];
+                $minutes = getDateRange($lot['expirationDate'])[1];
+                ?>
+              <div class="lot__timer timer <?= $hours < 1 ? 'timer--finishing' : ''; ?>">
+                  <?php echo $hours . ':' . $minutes; ?>
               </div>
             </div>
           </div>
