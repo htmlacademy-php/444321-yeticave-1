@@ -13,7 +13,7 @@
  *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
-function is_date_valid(string $date) : bool {
+function isDateValid(string $date) : bool {
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
@@ -29,7 +29,8 @@ function is_date_valid(string $date) : bool {
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function dbGetPrepareStmt(mysqli $link, string $sql, array $data = []): mysqli_stmt
+{
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
@@ -96,7 +97,7 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function getNounPluralForm (int $number, string $one, string $two, string $many): string
 {
     $number = (int) $number;
     $mod10 = $number % 10;
@@ -126,7 +127,8 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template($name, array $data = []) {
+function includeTemplate(string $name, array $data = []): string
+{
     $name = 'templates/' . $name;
     $result = '';
 
@@ -143,6 +145,11 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+/**
+ * Получает форматированную цену: добавляет разделитель тысяч и "₽" в конце строки
+ * @param int $price
+ * @return string
+ */
 function getFormatPrice(int $price): string {
     $price = ceil($price);
 
