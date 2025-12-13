@@ -130,7 +130,7 @@ function getNounPluralForm (int $number, string $one, string $two, string $many)
 function includeTemplate(string $name, array $data = []): string
 {
     $name = 'templates/' . $name;
-    $result = '';
+    $result = 'Ошибка загрузки шаблона';
 
     if (!is_readable($name)) {
         return $result;
@@ -153,9 +153,49 @@ function includeTemplate(string $name, array $data = []): string
 function getFormatPrice(int $price): string {
     $price = ceil($price);
 
-    if ($price >= 999) {
+    if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
 
     return $price . ' ₽';
+}
+
+/**
+ *
+ * на вход функция принимает дату в формате ГГГГ-ММ-ДД
+ * функция возвращает массив, где первый элемент — целое количество часов до даты, а второй — остаток в минутах
+ *
+ * Пример:
+ * Дано: текущая дата/время: 2019-10-10 14:31; дата истечения лота: 2019-10-11.
+ * Результат: get_dt_range("2019-10-11"); // [09, 29]
+ */
+function getDateRange(string $toDate): array
+{
+    $startDate = strtotime('now');
+    $finishDate = strtotime($toDate);
+    $diff = $finishDate - $startDate;
+
+    $secondsInMinute = 60;
+    $minutesInHour = $secondsInMinute * 60;
+
+    $result = ['00', '00'];
+
+    if ($diff <= 0) {
+        return $result;
+    } else {
+        $hours = floor($diff / $minutesInHour);
+
+        if ($hours < 1) {
+            $hours = 0;
+            $minutes = floor($diff / $secondsInMinute);
+        } else {
+            $minutes = floor($diff % $minutesInHour / $secondsInMinute);
+        }
+
+        // Форматирование времени
+        $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
+        $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
+
+        return [$hours, $minutes];
+    }
 }
