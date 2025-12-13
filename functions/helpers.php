@@ -151,13 +151,11 @@ function includeTemplate(string $name, array $data = []): string
  * @return string
  */
 function getFormatPrice(int $price): string {
-    $price = ceil($price);
-
     if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
 
-    return $price . ' ₽';
+    return $price . '<b class="rub">р</b>';
 }
 
 /**
