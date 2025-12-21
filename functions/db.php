@@ -55,25 +55,53 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data = []): mysqli_s
 }
 
 /**
- * Получает список всех категорий лотов
- * @param mysqli $link
- * @return mysqli_result|bool|string
+ * Возвращает ресурс соединения с бд или false
+ * @param array $config
+ * @return mysqli|false
  */
-function getCategoriesQuery(mysqli $link): mysqli_result|bool|string
+function dbConnect(array $config): mysqli|false
+{
+    $link = mysqli_connect($config['hostname'], $config['user'], $config['password'], $config['database']);
+
+    if (!$link) {
+        return false;
+    }
+
+    mysqli_set_charset($link, "utf8mb4");
+
+    return $link;
+}
+
+/**
+ * Получает список всех категорий лотов
+ * @param mysqli $connect
+ * @return array|false
+ */
+function getCategories(mysqli $connect): array|false
 {
     $sql = 'SELECT * FROM categories';
+    $query = mysqli_query($connect, $sql);
 
-    return mysqli_query($link, $sql);
+    if (!$query) {
+        return false;
+    }
+
+    return mysqli_fetch_all($query, MYSQLI_ASSOC);
 }
 
 /**
  * Получает самые новые, открытые лоты
- * @param mysqli $link
- * @return mysqli_result|bool|string
+ * @param mysqli $connect
+ * @return array|false
  */
-function getLotsQuery(mysqli $link): mysqli_result|bool|string
+function getLots(mysqli $connect): array|false
 {
     $sql = 'SELECT l.title, l.start_price, l.img_url, l.created_at, l.end_date, c.title as category FROM lots l LEFT JOIN categories c ON l.category_id = c.id WHERE l.end_date > NOW() AND l.winner_id IS NULL ORDER BY l.created_at DESC';
+    $query = mysqli_query($connect, $sql);
 
-    return mysqli_query($link, $sql);
+    if (!$query) {
+        return false;
+    }
+
+    return mysqli_fetch_all($query, MYSQLI_ASSOC);
 }
